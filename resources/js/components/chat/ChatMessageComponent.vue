@@ -1,36 +1,59 @@
 <template>
-  <div class="chat-list">
-      <div class="messages">
-          <div class="user ">Fitra <span class="time badge badge-light">2020-10-12</span></div>
+  <div class="chat-list mb-1" >
+      <div class="messages" v-for="(chat,index) in chats" :key="index">
+          <div class="user "><span class="badge badge-primary">{{chat.user.name}}</span><span class="time badge badge-light">{{chat.created_at}}</span></div>
           <div class="message">
-              "Pesan Fitra"          
+              "{{chat.subject}}"          
               </div>
-      </div>
       <hr class="divider">
-      <div class="messages">
-          <div class="user ">Patria <span class="time badge badge-light">2020-10-12</span></div>
-          <div class="message">
-              "Pesan Patria"
-          </div>
       </div>
-      <hr class="divider">
-      <div class="messages">
-          <div class="user ">Fahmi <span class="time badge badge-light">2020-10-12</span></div>
-          <div class="message">
-              "Pesan Fahmi"          
-              </div>
-      </div>
-      <hr class="divider">
+      
       
   </div>
 </template>
 
 <script>
-export default {
+import BusEvent from '../../bus'
 
+export default {
+    data(){
+        return{
+            chats:[]
+        }
+    },
+    mounted() {
+        this.getAllChats();
+        BusEvent.$on('chat.sent',(newChat)=>{
+            // console.log(newChat);
+            this.chats.push(newChat);
+            this.scrollToBottom();
+        });
+
+        
+    },
+    methods: {
+        getAllChats(){
+            axios.get('/chat/messages').then(response=>{
+            // console.log(response.data);
+            this.chats = response.data.reverse();
+            this.scrollToBottom();
+        })
+        },
+        scrollToBottom(){
+            setTimeout(function(){
+                let chatList= document.getElementsByClassName('chat-list')[0];
+                chatList.scrollTop = chatList.scrollHeight;
+
+            },1)
+            // console.log(chatList);
+        }
+    },
 }
 </script>
 
 <style>
-
+.chat-list{
+  max-height: 350px;
+  overflow-y: scroll;
+}
 </style>

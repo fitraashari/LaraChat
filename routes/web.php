@@ -22,3 +22,5 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::view('/chat', 'chat.index')->middleware('auth');
+Route::get('/chat/messages','ChatController@chatList');
+Route::post('/chat/new','ChatController@store');
