@@ -11,6 +11,9 @@
 |
 */
 
+// use Illuminate\Routing\Route;
+// use Illuminate\Support\Facades\Auth;
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -18,3 +21,4 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::view('/chat', 'chat.index')->middleware('auth');
