@@ -2,7 +2,7 @@
                 
                 <div class="card">
                     <div class="card-header bg-primary text-light">
-                        Ini Chatbox
+                        <i class="fas fas-comments"></i> Chat Box
                         </div>
                     <div class="card-body">
                         <div>

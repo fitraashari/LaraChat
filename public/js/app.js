@@ -10505,11 +10505,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      chats: []
+      chats: [],
+      current_user: Laravel.user.name
     };
   },
   mounted: function mounted() {
@@ -10554,6 +10559,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _bus__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../bus */ "./resources/js/bus.js");
 //
 //
 //
@@ -10568,8 +10574,29 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
-  mounted: function mounted() {// console.log('Component mounted.')
+  data: function data() {
+    return {
+      users: []
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    // console.log('Component mounted.')
+    _bus__WEBPACK_IMPORTED_MODULE_0__["default"].$on('chat.here', function (users) {
+      _this.users = users;
+    }).$on('chat.joining', function (user) {
+      _this.users.push(user);
+    }).$on('chat.leaving', function (user) {
+      _this.users = _this.users.filter(function (u) {
+        return u.id !== user.id;
+      });
+    });
   }
 });
 
@@ -74110,9 +74137,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "card" }, [
-    _c("div", { staticClass: "card-header bg-primary text-light" }, [
-      _vm._v("\n        Ini Chatbox\n        ")
-    ]),
+    _vm._m(0),
     _vm._v(" "),
     _c("div", { staticClass: "card-body" }, [
       _c(
@@ -74123,7 +74148,17 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header bg-primary text-light" }, [
+      _c("i", { staticClass: "fas fas-comments" }),
+      _vm._v(" Chat Box\n        ")
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -74198,17 +74233,29 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "chat-list mb-1" },
+    { staticClass: "chat-list mb-2 border rounded p-2" },
     _vm._l(_vm.chats, function(chat, index) {
       return _c("div", { key: index, staticClass: "messages" }, [
-        _c("div", { staticClass: "user " }, [
-          _c("span", { staticClass: "badge badge-primary" }, [
-            _vm._v(_vm._s(chat.user.name))
-          ]),
-          _c("span", { staticClass: "time badge badge-light" }, [
-            _vm._v(_vm._s(chat.created_at))
-          ])
-        ]),
+        _c(
+          "div",
+          {
+            staticClass:
+              "user d-flex justify-content-between align-items-center"
+          },
+          [
+            chat.user.name == _vm.current_user
+              ? _c("span", { staticClass: "badge badge-primary shadow-sm" }, [
+                  _vm._v(_vm._s(chat.user.name))
+                ])
+              : _c("span", { staticClass: "badge badge-secondary shadow-sm" }, [
+                  _vm._v(_vm._s(chat.user.name))
+                ]),
+            _vm._v(" "),
+            _c("span", { staticClass: "time badge badge-light shadow-sm" }, [
+              _vm._v(_vm._s(chat.created_at))
+            ])
+          ]
+        ),
         _vm._v(" "),
         _c("div", { staticClass: "message" }, [
           _vm._v(
@@ -74246,24 +74293,33 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card" }, [
-      _c("div", { staticClass: "card-header bg-success text-light" }, [
-        _vm._v("\n        Online User\n        ")
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "card-body" }, [
-        _c("ul", [_c("li", [_vm._v("Anjay")])])
-      ])
+  return _c("div", { staticClass: "card" }, [
+    _c("div", { staticClass: "card-header bg-success text-light" }, [
+      _vm._v(
+        "\n        Users online (" + _vm._s(_vm.users.length) + ")\n        "
+      )
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "card-body" }, [
+      _c(
+        "ul",
+        { staticClass: "list-group" },
+        _vm._l(_vm.users, function(user) {
+          return _c("li", { key: user.id, staticClass: "list-group-item" }, [
+            _c("span", { staticClass: "badge badge-success badge-pill" }, [
+              _vm._v("Online")
+            ]),
+            _vm._v(
+              "\n                " + _vm._s(user.name) + "\n                "
+            )
+          ])
+        }),
+        0
+      )
     ])
-  }
-]
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -86521,6 +86577,8 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   encrypted: true
 });
 
+__webpack_require__(/*! ./echo.js */ "./resources/js/echo.js");
+
 /***/ }),
 
 /***/ "./resources/js/bus.js":
@@ -86898,6 +86956,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ChatUserListComponent_vue_vue_type_template_id_2dacdff0___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
+
+/***/ }),
+
+/***/ "./resources/js/echo.js":
+/*!******************************!*\
+  !*** ./resources/js/echo.js ***!
+  \******************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _bus_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./bus.js */ "./resources/js/bus.js");
+
+Echo.join('chat-channel').here(function (users) {
+  _bus_js__WEBPACK_IMPORTED_MODULE_0__["default"].$emit('chat.here', users);
+}).joining(function (user) {
+  _bus_js__WEBPACK_IMPORTED_MODULE_0__["default"].$emit('chat.joining', user);
+}).leaving(function (user) {
+  _bus_js__WEBPACK_IMPORTED_MODULE_0__["default"].$emit('chat.leaving', user);
+}).listen('ChatStoredEvent', function (e) {
+  _bus_js__WEBPACK_IMPORTED_MODULE_0__["default"].$emit('chat.sent', e.data);
+});
 
 /***/ }),
 

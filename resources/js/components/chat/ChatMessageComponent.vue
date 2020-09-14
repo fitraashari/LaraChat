@@ -1,7 +1,11 @@
 <template>
-  <div class="chat-list mb-1" >
+  <div class="chat-list mb-2 border rounded p-2" >
       <div class="messages" v-for="(chat,index) in chats" :key="index">
-          <div class="user "><span class="badge badge-primary">{{chat.user.name}}</span><span class="time badge badge-light">{{chat.created_at}}</span></div>
+          <div class="user d-flex justify-content-between align-items-center">
+              <span class="badge badge-primary shadow-sm" v-if="chat.user.name==current_user">{{chat.user.name}}</span>
+              <span class="badge badge-secondary shadow-sm" v-else>{{chat.user.name}}</span>
+              
+              <span class="time badge badge-light shadow-sm">{{chat.created_at}}</span></div>
           <div class="message">
               "{{chat.subject}}"          
               </div>
@@ -18,7 +22,8 @@ import BusEvent from '../../bus'
 export default {
     data(){
         return{
-            chats:[]
+            chats:[],
+            current_user:Laravel.user.name
         }
     },
     mounted() {
