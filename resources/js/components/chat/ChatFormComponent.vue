@@ -38,10 +38,10 @@ methods: {
             }
         }
             axios.post('/chat/new',{subject:input}).then(response=>{
-                console.log(response);
-            })
             BusEvent.$emit('chat.sent',newChat);
              this.body='';
+            })
+            
             
     }
 },

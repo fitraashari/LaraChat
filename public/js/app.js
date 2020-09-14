@@ -10454,6 +10454,8 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     sendChat: function sendChat() {
+      var _this = this;
+
       var input = this.body.trim();
 
       if (input === '') {
@@ -10470,10 +10472,9 @@ __webpack_require__.r(__webpack_exports__);
       axios.post('/chat/new', {
         subject: input
       }).then(function (response) {
-        console.log(response);
+        _bus__WEBPACK_IMPORTED_MODULE_1__["default"].$emit('chat.sent', newChat);
+        _this.body = '';
       });
-      _bus__WEBPACK_IMPORTED_MODULE_1__["default"].$emit('chat.sent', newChat);
-      this.body = '';
     }
   }
 });
